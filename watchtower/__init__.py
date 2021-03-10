@@ -222,7 +222,7 @@ class CloudWatchLogHandler(logging.Handler):
         if isinstance(message.msg, Mapping):
             message.msg = json.dumps(message.msg, default=self.json_serialize_default)
 
-        cwl_message = dict(timestamp=int(message.created * 1000), message=self.format(message))
+        cwl_message = dict(timestamp=int(message.created * 1000), message=(self.format(message) or " "))
 
         if self.use_queues:
             if stream_name not in self.queues:

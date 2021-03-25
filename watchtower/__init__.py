@@ -1,6 +1,7 @@
 from collections.abc import Mapping
 from datetime import date, datetime
 from operator import itemgetter
+from logging import Formatter
 import json, logging, time, threading, warnings
 import queue
 
@@ -140,6 +141,9 @@ class CloudWatchLogHandler(logging.Handler):
         self.creating_log_stream, self.shutting_down = False, False
         self.create_log_stream = create_log_stream
         self.log_group_retention_days = log_group_retention_days
+        # Horrible hack to set custom formatter
+        self.formatter = Formatter(fmt='%(asctime)s %(levelname)s: %(message)s [%(module)s.%(funcName)s:%(lineno)d]',
+                                   datefmt='%Y-%m-%dT%H:%M:%S')
 
         # Creating session should be the final call in __init__, after all instance attributes are set.
         # This ensures that failing to create the session will not result in any missing attribtues.
